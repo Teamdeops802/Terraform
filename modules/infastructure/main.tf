@@ -94,7 +94,7 @@ resource "aws_instance" "k8s" {
   
   # attach private ip to inventory file
   provisioner "local-exec" {
-  command = "echo ${self.tags.Name} ansible_host=${self.private_ip} >> ./Ansible_DevOps2022/inventory"
+  command = "echo ${self.tags.Name} ansible_host=${self.private_ip} >> ./ansible_DevOps2022/inventory"
   }
 }
 
@@ -116,7 +116,7 @@ resource "aws_instance" "jenkins" {
   
   # attach private ip to inventory file  
   provisioner "local-exec" {
-  command = "echo ${self.tags.Name} ansible_host=${self.private_ip} >> ./Ansible_DevOps2022/inventory"
+  command = "echo ${self.tags.Name} ansible_host=${self.private_ip} >> ./ansible_DevOps2022/inventory"
   }
 }
 

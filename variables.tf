@@ -1,3 +1,15 @@
+variable "aws_access_key" {
+    type = string
+}
+
+variable "aws_secret_key" {
+    type = strings
+}
+
+variable "GH_TOKEN" {
+    type = string
+}
+
 variable "ssh-key_name" {
     type = string
     default = "ssh-key"
@@ -66,10 +78,6 @@ variable "ansible_script_path" {
 variable "ec2_ami" {
     type = string
     default = "ami-06640050dc3f556bb"
-}
-
-variable "GH_TOKEN" {
-    type = string
 }
 
 variable "repo_name" {

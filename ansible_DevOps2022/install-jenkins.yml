@@ -1,0 +1,66 @@
+---
+- hosts: jenkins
+  become: yes
+  remote_user: ec2-user
+  become_user: root
+  tasks:
+    - name: Download Long Term Jenkins release
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: Import jenkins key from url
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+    - name: Add docker-ce.repo repository
+      shell: yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+    
+    - name: yum update
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Installing docker, jdk, git, jenkins
+      package:
+        name:
+          - docker-ce
+          - docker-ce-cli 
+          - containerd.io 
+          - docker-compose-plugin
+          - java-11-openjdk
+          - git
+          - jenkins
+        state: present
+
+    - name: daemon-reload to pick up config changes
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Staring & enabling jenkins
+      service:
+        name: "jenkins"
+        state: started
+        enabled: yes
+
+    - name: Staring & enabling docker
+      service:
+        name: "docker"
+        state: started
+        enabled: yes
+
+    - name: update docker.sock mode
+      file:
+        path: /var/run/docker.sock
+        mode: "0666"
+
+    # - name: Copy ssh-key.pem file with owner and permissions
+    #   copy:
+    #     src: /home/ec2-user/ansible_DevOps2022/ssh-key.pem
+    #     dest: /var/lib/jenkins/
+    #     owner: ec2-user
+    #     group: ec2-user
+    #     mode: '400'

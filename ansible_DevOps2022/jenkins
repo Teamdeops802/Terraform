@@ -1,0 +1,30 @@
+
+#Publish over SSH ansible global config folder
+/home/ec2-user/ansible_DevOps2022
+
+#jenkins JAVA_HOME for jdk
+/usr/lib/jvm/java-11-openjdk-11.0.16.1.1-1.el8_6.x86_64
+
+----------------------------------
+
+#git project url
+https://github.com/Teamdeops802/java-app.git/
+*/main
+
+#maven build  Goals and options
+package
+
+#dockerhub token secret text
+dckr_pat_9upCj0XGULZuWWl-1QPKfquEsJI
+
+#maven post step docker build login push
+docker build -t teamdevops802/java-app:1.0 .
+docker login -u teamdevops802 -p $DOCKERHUB_PWD
+docker push teamdevops802/java-app:1.0
+
+#publish over SSH
+cd /home/ec2-user/ansible_DevOps2022
+touch from_jenkins
+export ANSIBLE_HOST_KEY_CHECKING=False
+ansible-playbook install-java-app.yml -i inventory
+ansible -i inventory k8s -m shell -a "kubectl  port-forward service/java-app 8080:8080 --address=0.0.0.0" &

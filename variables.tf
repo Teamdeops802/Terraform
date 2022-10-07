@@ -3,7 +3,7 @@ variable "aws_access_key" {
 }
 
 variable "aws_secret_key" {
-  type = strings
+  type = string
 }
 
 variable "GH_TOKEN" {
